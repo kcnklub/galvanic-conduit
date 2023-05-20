@@ -1,44 +1,41 @@
-mod connectivity_model;
+pub mod connectivity_model;
 
-enum Node {
+#[derive(Debug)]
+pub struct Node {
+    id: String,
+    node_type: NodeType,
+    node_data: NodeData,
+}
+
+#[derive(Debug)]
+pub enum NodeType {
+    Meter,
+    Span,
+    Source,
+}
+
+#[derive(Debug)]
+pub enum NodeData {
     Meter(MeterData),
     Span(SpanData),
     Source(SourceData),
 }
 
-struct MeterData {
-    id: String,
-    source: String,
+#[derive(Debug)]
+pub struct MeterData {
+    pub id: String,
+    pub source: String,
 }
 
-struct SpanData {
+#[derive(Debug)]
+pub struct SpanData {
     id: String,
     source: String,
     downstream: String,
 }
 
-struct SourceData {
+#[derive(Debug)]
+pub struct SourceData {
     id: String,
     downstream: String,
-}
-
-#[cfg(test)]
-mod test {
-    use crate::{MeterData, Node, SpanData};
-
-    #[test]
-    fn test() {
-        let meter_data = MeterData {
-            id: "a".to_string(),
-            source: "span_a".to_string(),
-        };
-        let meter = Node::Meter(meter_data);
-
-        let span_data = SpanData {
-            id: "span_a".to_string(),
-            source: "source_a".to_string(),
-            downstream: "a".to_string(),
-        };
-        let span = Node::Span(span_data);
-    }
 }
