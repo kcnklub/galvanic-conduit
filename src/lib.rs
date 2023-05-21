@@ -2,9 +2,9 @@ pub mod connectivity_model;
 
 #[derive(Debug)]
 pub struct Node {
-    id: String,
+    _id: String,
     node_type: NodeType,
-    node_data: NodeData,
+    _node_data: NodeData,
 }
 
 #[derive(Debug)]
@@ -29,13 +29,13 @@ pub struct MeterData {
 
 #[derive(Debug)]
 pub struct SpanData {
-    id: String,
-    source: String,
-    downstream: String,
+    _id: String,
+    _source: String,
+    _downstream: String,
 }
 
 #[derive(Debug)]
 pub struct SourceData {
-    id: String,
-    downstream: String,
+    _id: String,
+    _downstream: String,
 }
