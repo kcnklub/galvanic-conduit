@@ -48,9 +48,9 @@ mod test {
         };
 
         let node = Node {
-            id: "a".to_string(),
+            _id: "a".to_string(),
             node_type: crate::NodeType::Meter,
-            node_data: NodeData::Meter(meter_data),
+            _node_data: NodeData::Meter(meter_data),
         };
 
         map.insert("a".to_string(), node);
