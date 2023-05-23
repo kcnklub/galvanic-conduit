@@ -1,37 +1,26 @@
 use std::collections::HashMap;
 
-use crate::{Node, NodeType};
+use crate::nodes::Node;
 
 /// Basic Connectivity model that holds all nodes in a hashmap to be tracked.
-pub struct ConnectivityModel {
-    nodes: HashMap<String, Node>,
+pub struct ConnectivityModel<NodeMetaData, NodeConnectivityData> {
+    nodes: HashMap<String, Node<NodeMetaData, NodeConnectivityData>>,
 }
 
-impl ConnectivityModel {
-    pub fn get_node(&self, id: &str) -> Option<&Node> {
+impl<NodeMetaData, NodeConnectivityData> ConnectivityModel<NodeMetaData, NodeConnectivityData> {
+    pub fn get_node(&self, id: &str) -> Option<&Node<NodeMetaData, NodeConnectivityData>> {
         self.nodes.get(id)
     }
 
-    /// This is very slow because it looks over every node that in the the model at the moment.
-    pub fn get_sources_nodes(&self) -> Vec<&Node> {
-        let mut nodes_found: Vec<&Node> = vec![];
-        for (_, value) in self.nodes.iter() {
-            if let NodeType::Source = value.node_type {
-                nodes_found.push(value);
-            }
-        }
-        nodes_found
-    }
-
-    pub fn add_node(&mut self, node: Node) {
-        let node_id = node._id.clone();
+    pub fn add_node(&mut self, node: Node<NodeMetaData, NodeConnectivityData>) {
+        let node_id = node.id.clone();
         self.nodes.insert(node_id, node);
     }
 }
 
 #[cfg(test)]
 mod test {
-    use crate::{MeterData, Node, NodeData};
+    use crate::nodes::{MeterData, Node, NodeData, NodeType};
     use claims::{assert_none, assert_some};
     use std::collections::HashMap;
 
@@ -46,10 +35,10 @@ mod test {
             source: "span_a".to_string(),
         };
 
-        let node = Node {
-            _id: "a".to_string(),
-            node_type: crate::NodeType::Meter,
-            _node_data: NodeData::Meter(meter_data),
+        let node = Node::<NodeType, NodeData> {
+            id: "a".to_string(),
+            meta_data: NodeType::Meter,
+            connectivity_data: NodeData::Meter(meter_data),
         };
 
         map.insert("a".to_string(), node);
@@ -66,26 +55,13 @@ mod test {
     fn no_node_in_map() {
         // arrange
         let map = HashMap::new();
-        let connectivity_model = ConnectivityModel { nodes: map };
+        let connectivity_model = ConnectivityModel::<String, String> { nodes: map };
 
         // act
         let output = connectivity_model.get_node("a");
 
         // assert
         assert_none!(output);
-    }
-
-    #[test]
-    fn get_source() {
-        // arrange
-        let map = HashMap::new();
-        let connectivity_model = ConnectivityModel { nodes: map };
-
-        // act
-        let output = connectivity_model.get_sources_nodes();
-
-        // assert
-        assert!(output.is_empty());
     }
 
     #[test]
@@ -98,10 +74,10 @@ mod test {
             source: "span_a".to_string(),
         };
 
-        let node = Node {
-            _id: "a".to_string(),
-            node_type: crate::NodeType::Meter,
-            _node_data: NodeData::Meter(meter_data),
+        let node = Node::<NodeType, NodeData> {
+            id: "a".to_string(),
+            meta_data: NodeType::Meter,
+            connectivity_data: NodeData::Meter(meter_data),
         };
 
         // act
