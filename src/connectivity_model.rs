@@ -3,7 +3,7 @@ use std::collections::HashMap;
 use crate::{Node, NodeType};
 
 trait GetNodes {
-    fn get_node(&self, id: &String) -> Option<&Node>;
+    fn get_node(&self, id: &str) -> Option<&Node>;
 
     fn get_sources_nodes(&self) -> Vec<&Node>;
 }
@@ -14,7 +14,7 @@ pub struct ConnectivityModel {
 }
 
 impl GetNodes for ConnectivityModel {
-    fn get_node(&self, id: &String) -> Option<&Node> {
+    fn get_node(&self, id: &str) -> Option<&Node> {
         self.nodes.get(id)
     }
 
@@ -22,9 +22,8 @@ impl GetNodes for ConnectivityModel {
     fn get_sources_nodes(&self) -> Vec<&Node> {
         let mut nodes_found: Vec<&Node> = vec![];
         for (_, value) in self.nodes.iter() {
-            match value.node_type {
-                NodeType::Source => nodes_found.push(&value),
-                _ => {}
+            if let NodeType::Source = value.node_type {
+                nodes_found.push(value);
             }
         }
         nodes_found
@@ -49,9 +48,9 @@ mod test {
         };
 
         let node = Node {
-            id: "a".to_string(),
+            _id: "a".to_string(),
             node_type: crate::NodeType::Meter,
-            node_data: NodeData::Meter(meter_data),
+            _node_data: NodeData::Meter(meter_data),
         };
 
         map.insert("a".to_string(), node);
