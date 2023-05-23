@@ -8,12 +8,12 @@ pub struct ConnectivityModel {
 }
 
 impl ConnectivityModel {
-    fn get_node(&self, id: &str) -> Option<&Node> {
+    pub fn get_node(&self, id: &str) -> Option<&Node> {
         self.nodes.get(id)
     }
 
     /// This is very slow because it looks over every node that in the the model at the moment.
-    fn get_sources_nodes(&self) -> Vec<&Node> {
+    pub fn get_sources_nodes(&self) -> Vec<&Node> {
         let mut nodes_found: Vec<&Node> = vec![];
         for (_, value) in self.nodes.iter() {
             if let NodeType::Source = value.node_type {
@@ -23,7 +23,7 @@ impl ConnectivityModel {
         nodes_found
     }
 
-    fn add_node(&mut self, node: Node) {
+    pub fn add_node(&mut self, node: Node) {
         let node_id = node._id.clone();
         self.nodes.insert(node_id, node);
     }
@@ -35,7 +35,7 @@ mod test {
     use claims::{assert_none, assert_some};
     use std::collections::HashMap;
 
-    use super::{ConnectivityModel};
+    use super::ConnectivityModel;
 
     #[test]
     fn get_node() {
@@ -111,5 +111,4 @@ mod test {
         let output = connectivity_model.get_node("a");
         assert_some!(output);
     }
-
 }
