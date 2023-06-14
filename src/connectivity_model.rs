@@ -13,7 +13,7 @@ where
 }
 
 pub trait Parsable {
-    fn parse(input: &Vec<&str>) -> Self;
+    fn parse(input: &[&str]) -> Self;
 }
 
 impl<NodeMetaData, NodeConnectivityData> ConnectivityModel<NodeMetaData, NodeConnectivityData>
@@ -82,7 +82,7 @@ mod test {
     }
 
     impl Parsable for String {
-        fn parse(_input: &Vec<&str>) -> Self {
+        fn parse(_input: &[&str]) -> Self {
             String::from("something")
         }
     }

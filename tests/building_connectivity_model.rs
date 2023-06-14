@@ -9,7 +9,7 @@ struct TestMetaData {
 
 /// This is a wrapper struct for a string so that I am impl Parsable.
 impl Parsable for TestMetaData {
-    fn parse(input: &Vec<&str>) -> Self {
+    fn parse(input: &[&str]) -> Self {
         Self {
             non_unique_data: String::from(input[1]),
         }
@@ -22,7 +22,7 @@ struct TestConnectivityData {
 }
 
 impl Parsable for TestConnectivityData {
-    fn parse(input: &Vec<&str>) -> Self {
+    fn parse(input: &[&str]) -> Self {
         Self {
             upstream: String::from(input[2]),
         }

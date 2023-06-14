@@ -8,7 +8,7 @@ pub enum NodeType {
 }
 
 impl Parsable for NodeType {
-    fn parse(_input: &Vec<&str>) -> Self {
+    fn parse(_input: &[&str]) -> Self {
         NodeType::Meter
     }
 }
@@ -21,7 +21,7 @@ pub enum NodeData {
 }
 
 impl Parsable for NodeData {
-    fn parse(_input: &Vec<&str>) -> Self {
+    fn parse(_input: &[&str]) -> Self {
         NodeData::Meter(MeterData {
             id: "something".to_string(),
             source: "soemthing".to_string(),
