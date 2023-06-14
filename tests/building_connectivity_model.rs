@@ -54,7 +54,6 @@ fn build_single_node_model() {
     let node = model.get_node("node1");
     assert_some!(node);
     let node = node.unwrap();
-
     assert_eq!("test_data", node.meta_data.non_unique_data);
     assert_eq!("connectivity_data", node.connectivity_data.upstream)
 }
