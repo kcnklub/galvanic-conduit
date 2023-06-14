@@ -1,3 +1,5 @@
+use crate::connectivity_model::Parsable;
+
 #[derive(Debug)]
 pub enum NodeType {
     Meter,
@@ -5,11 +7,26 @@ pub enum NodeType {
     Source,
 }
 
+impl Parsable for NodeType {
+    fn parse(_input: &Vec<&str>) -> Self {
+        NodeType::Meter
+    }
+}
+
 #[derive(Debug)]
 pub enum NodeData {
     Meter(MeterData),
     Span(SpanData),
     Source(SourceData),
+}
+
+impl Parsable for NodeData {
+    fn parse(_input: &Vec<&str>) -> Self {
+        NodeData::Meter(MeterData {
+            id: "something".to_string(),
+            source: "soemthing".to_string(),
+        })
+    }
 }
 
 #[derive(Debug)]

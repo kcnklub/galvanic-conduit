@@ -1,13 +1,26 @@
-use std::collections::HashMap;
+use std::{collections::HashMap, fs, io::Error};
 
 use crate::nodes::Node;
 
 /// Basic Connectivity model that holds all nodes in a hashmap to be tracked.
-pub struct ConnectivityModel<NodeMetaData, NodeConnectivityData> {
+#[derive(Debug)]
+pub struct ConnectivityModel<NodeMetaData, NodeConnectivityData>
+where
+    NodeMetaData: Parsable,
+    NodeConnectivityData: Parsable,
+{
     nodes: HashMap<String, Node<NodeMetaData, NodeConnectivityData>>,
 }
 
-impl<NodeMetaData, NodeConnectivityData> ConnectivityModel<NodeMetaData, NodeConnectivityData> {
+pub trait Parsable {
+    fn parse(input: &Vec<&str>) -> Self;
+}
+
+impl<NodeMetaData, NodeConnectivityData> ConnectivityModel<NodeMetaData, NodeConnectivityData>
+where
+    NodeMetaData: Parsable,
+    NodeConnectivityData: Parsable,
+{
     pub fn get_node(&self, id: &str) -> Option<&Node<NodeMetaData, NodeConnectivityData>> {
         self.nodes.get(id)
     }
@@ -15,6 +28,23 @@ impl<NodeMetaData, NodeConnectivityData> ConnectivityModel<NodeMetaData, NodeCon
     pub fn add_node(&mut self, node: Node<NodeMetaData, NodeConnectivityData>) {
         let node_id = node.id.clone();
         self.nodes.insert(node_id, node);
+    }
+
+    pub fn build_from_csv(file_name: &str) -> Result<Self, Error> {
+        let data = fs::read_to_string(file_name)?;
+        let mut map: HashMap<String, Node<NodeMetaData, NodeConnectivityData>> = HashMap::new();
+        for line in data.lines() {
+            let split_line = line.split(", ").collect::<Vec<&str>>();
+
+            let node_id = String::from(split_line[0]);
+            let node = Node::<NodeMetaData, NodeConnectivityData> {
+                id: node_id.clone(),
+                meta_data: NodeMetaData::parse(&split_line),
+                connectivity_data: NodeConnectivityData::parse(&split_line),
+            };
+            map.insert(node_id, node);
+        }
+        Ok(Self { nodes: map })
     }
 }
 
@@ -24,7 +54,7 @@ mod test {
     use claims::{assert_none, assert_some};
     use std::collections::HashMap;
 
-    use super::ConnectivityModel;
+    use super::{ConnectivityModel, Parsable};
 
     #[test]
     fn get_node() {
@@ -49,6 +79,12 @@ mod test {
 
         // assert
         assert_some!(output);
+    }
+
+    impl Parsable for String {
+        fn parse(_input: &Vec<&str>) -> Self {
+            String::from("something")
+        }
     }
 
     #[test]
