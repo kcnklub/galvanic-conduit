@@ -32,7 +32,7 @@ where
         let data = fs::read_to_string(file_name)?;
         let mut map: HashMap<String, Node<NodeMetaData, NodeConnectivityData>> = HashMap::new();
         for line in data.lines() {
-            let split_line = line.split(",").collect::<Vec<&str>>();
+            let split_line = line.split(',').collect::<Vec<&str>>();
 
             let node_id = String::from(split_line[0]);
             let node = Node::<NodeMetaData, NodeConnectivityData> {
