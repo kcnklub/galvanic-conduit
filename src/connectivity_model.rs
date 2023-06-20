@@ -10,6 +10,8 @@ where
     nodes: HashMap<String, Node<NodeMetaData, NodeConnectivityData>>,
 }
 
+/// This is a trait that allows us to parse the data from the csv file into the
+/// correct type.
 pub trait Parsable {
     fn parse(input: &[&str]) -> Self;
 }
@@ -21,11 +23,6 @@ where
 {
     pub fn get_node(&self, id: &str) -> Option<&Node<NodeMetaData, NodeConnectivityData>> {
         self.nodes.get(id)
-    }
-
-    pub fn add_node(&mut self, node: Node<NodeMetaData, NodeConnectivityData>) {
-        let node_id = node.id.clone();
-        self.nodes.insert(node_id, node);
     }
 
     pub fn build_from_csv(file_name: &str) -> Result<Self, Error> {
